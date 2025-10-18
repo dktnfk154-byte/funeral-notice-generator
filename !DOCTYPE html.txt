@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>부고문 자동 생성기 (모바일 지원, 단일 파일)</title>
+  <!-- Tailwind CDN (스타일만 사용, 빌드 불필요) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print { body { background:white; } pre { font-size:12pt; } }
+    pre { white-space:pre-wrap; line-height:1.6; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-5xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <section class="space-y-4">
+      <h1 class="text-2xl font-bold">부고문 자동 생성기</h1>
+      <p class="text-sm text-gray-600">휴대폰/PC에서 입력만 하면 오른쪽에 완성본이 자동 생성됩니다. 복사 또는 인쇄(PDF) 가능.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">작성일자</span>
+          <input id="작성일자" type="date" class="px-3 py-2 rounded-lg border" />
+        </label>
+        <div></div>
+
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">회사명</span>
+          <input id="회사명" class="px-3 py-2 rounded-lg border" placeholder="(주)성진전기"/>
+        </label>
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">지회코드</span>
+          <input id="지회코드" class="px-3 py-2 rounded-lg border" placeholder="대구-00927"/>
+        </label>
+
+        <label class="flex items-center gap-2 text-sm col-span-1 md:col-span-2">
+          <input id="상조회원여부" type="checkbox" class="scale-110" checked />
+          <span class="text-gray-700">상조회원 포함 문구 사용</span>
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">성명</span>
+          <input id="성명" class="px-3 py-2 rounded-lg border" placeholder="박일근"/>
+        </label>
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">직함</span>
+          <input id="직함" class="px-3 py-2 rounded-lg border" placeholder="대표이사"/>
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">관계</span>
+          <select id="관계" class="px-3 py-2 rounded-lg border">
+            <option>부친</option>
+            <option>모친</option>
+            <option>장인</option>
+            <option selected>장모</option>
+            <option>배우자</option>
+            <option>자녀</option>
+            <option>기타</option>
+          </select>
+        </label>
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">고인 성함</span>
+          <input id="고인성함" class="px-3 py-2 rounded-lg border" placeholder="김춘자"/>
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">별세일자</span>
+          <input id="별세일자" type="date" class="px-3 py-2 rounded-lg border" />
+        </label>
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">발인일자</span>
+          <input id="발인일자" type="date" class="px-3 py-2 rounded-lg border" />
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">장례식장명</span>
+          <input id="장례식장명" class="px-3 py-2 rounded-lg border" placeholder="대구성심병원장례식장 특실"/>
+        </label>
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">주소</span>
+          <input id="주소" class="px-3 py-2 rounded-lg border" placeholder="대구광역시 남구 대명로 14"/>
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">사무실 전화</span>
+          <input id="사무실전화" class="px-3 py-2 rounded-lg border" placeholder="053-783-5598"/>
+        </label>
+        <label class="flex flex-col gap-1 text-sm">
+          <span class="text-gray-700">휴대전화 (괄호표기 포함)</span>
+          <input id="휴대전화표기" class="px-3 py-2 rounded-lg border" placeholder="010-3803-7162 (박일근 대표)"/>
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm md:col-span-2">
+          <span class="text-gray-700">마음 전하실 곳 (대괄호 포함 표기됨)</span>
+          <input id="마음전하실곳" class="px-3 py-2 rounded-lg border" placeholder="농협은행 / 8411-2656-0113-93 박일근"/>
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm md:col-span-2">
+          <span class="text-gray-700">마지막 기관명(대괄호 유지)</span>
+          <input id="기관명" class="px-3 py-2 rounded-lg border" value="[한국전기공사협회 대구광역시회]"/>
+        </label>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button id="copyBtn" class="px-3 py-2 rounded-lg bg-blue-600 text-white">복사</button>
+        <button id="printBtn" class="px-3 py-2 rounded-lg bg-gray-800 text-white">PDF로 저장(인쇄)</button>
+        <button id="exampleBtn" class="px-3 py-2 rounded-lg bg-gray-200">예시 채우기</button>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">완성본</h2>
+      <pre id="output" class="text-[13.5px]"></pre>
+    </section>
+  </div>
+
+  <script>
+    // ===== 유틸 =====
+    function toYMD(date){
+      if(!date) return '';
+      const d = new Date(date);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${y}.${m}.${dd}`;
+    }
+    function weekdayK(date){
+      const d = new Date(date);
+      return ['일','월','화','수','목','금','토'][d.getDay()];
+    }
+    function fmt(date){ if(!date) return ''; return `${toYMD(date)}(${weekdayK(date)})`; }
+    function padLeft(text, total){
+      const len = text.length; const n = Math.max(0, total - len);
+      return ' '.repeat(n) + text;
+    }
+
+    // ===== 요소 =====
+    const $ = (id) => document.getElementById(id);
+    const fields = ['작성일자','회사명','지회코드','상조회원여부','성명','직함','관계','고인성함','별세일자','발인일자','장례식장명','주소','사무실전화','휴대전화표기','마음전하실곳','기관명'];
+
+    function build(){
+      const data = Object.fromEntries(fields.map(k=>[k, k==='상조회원여부'? $(k).checked : $(k).value]));
+
+      const title = padLeft('訃     告', 94);
+      const dateLine = padLeft(fmt(data.작성일자), 109);
+      const prefix = data.상조회원여부 ? '우리시회 회원이시며 상조회원이신' : '우리시회 회원이신';
+      const first = `${prefix} ${data.회사명}(${data.지회코드}) ${data.성명} ${data.직함}님의 ${data.관계} ${data.고인성함}님께서 별세하셨기에 다음과 같이 알려드립니다.`;
+
+      const lines = [
+        `■ 별세일자 : ${fmt(data.별세일자)}`,
+        `■ 발인일자 : ${fmt(data.발인일자)}`,
+        `■ 빈    소 : ${data.장례식장명}`,
+        `               (${data.주소})`,
+        `■ 연락처 : ${data.사무실전화} (사무실)`,
+        `              ${data.휴대전화표기}`,
+        `※ 마음 전하실 곳 : [${data.마음전하실곳}]`,
+        `※ 일괄 전송으로 인하여 관련 없으신 회원께서는 양해하여 주시기 바랍니다.`,
+        padLeft(data.기관명, 99)
+      ];
+
+      $('output').textContent = [title, dateLine, first, ...lines].join('
+');
+    }
+
+    // 초기값: 오늘 날짜 자동 채움
+    const today = new Date();
+    $('작성일자').valueAsDate = today;
+    $('별세일자').valueAsDate = today;
+    $('발인일자').valueAsDate = today;
+
+    // 이벤트 바인딩
+    fields.forEach(k=>{ const el=$(k); if(!el) return; el.addEventListener('input', build); el.addEventListener('change', build); });
+
+    $('copyBtn').onclick = async () => {
+      try {
+        await navigator.clipboard.writeText($('output').textContent);
+        alert('복사되었습니다. 문자/카톡/문서에 붙여넣기 하세요.');
+      } catch(e){ alert('복사 실패: HTTPS 환경 또는 브라우저 권한을 확인하세요.'); }
+    };
+    $('printBtn').onclick = () => window.print();
+    $('exampleBtn').onclick = () => {
+      $('회사명').value = '(주)성진전기';
+      $('지회코드').value = '대구-00927';
+      $('성명').value = '박일근';
+      $('직함').value = '대표이사';
+      $('관계').value = '장모';
+      $('고인성함').value = '김춘자';
+      $('장례식장명').value = '대구성심병원장례식장 특실';
+      $('주소').value = '대구광역시 남구 대명로 14';
+      $('사무실전화').value = '053-783-5598';
+      $('휴대전화표기').value = '010-3803-7162 (박일근 대표)';
+      $('마음전하실곳').value = '농협은행 / 8411-2656-0113-93 박일근';
+      build();
+    };
+
+    build();
+  </script>
+</body>
+</html>
